@@ -1,6 +1,6 @@
 // Supabase > Project Settings > API'deki proje URL'si ve publishable / anon anahtarı.
 // Sadece PUBLIC (publishable/anon) anahtar koyun. service_role / secret KESİNLİKLE koymayın.
 window.APARTMAN_CONFIG = {
-  supabaseUrl: 'BURAYA_SUPABASE_PROJECT_URL',
-  supabaseAnonKey: 'BURAYA_SUPABASE_PUBLISHABLE_KEY'
+  supabaseUrl: 'https://pgqqzipjxjivxsklcbfh.supabase.co',
+  supabaseAnonKey: 'sb_publishable_B-aSlOJau2lmFasmHCikFA_S1tcGCwo'
 };
