@@ -118,7 +118,7 @@ function chartHtml(){
 }
 function recentRows(list){return `<div class="scroll-x"><table class="table"><thead><tr><th>İşlem</th><th>Tarih</th><th>Hesap</th><th class="right">Tutar</th></tr></thead><tbody>${list.map(t=>`<tr><td><strong class="idname">${esc(kindLabel(t.kind))}</strong><small class="secondary">${esc(t.description || (t.apartment_id?unitName(t.apartment_id):t.category||'—'))}</small></td><td class="muted nowrap">${shortDate(t.occurred_on)}</td><td>${esc(t.kind==='virman'?`${accountName(t.from_account_id)} → ${accountName(t.to_account_id)}`:accountName(t.account_id))}</td><td class="right mono bold ${t.kind==='gider'?'negative':t.kind==='virman'?'':'positive'}">${t.kind==='gider'?'-':t.kind==='virman'?'':'+'}${money(t.amount)}</td></tr>`).join('')}</tbody></table></div>`;}
 function mobileDuesList(units,dues,paidByUnit,debts){
- return `<div class="mobile-dues-list">${units.map(u=>{const d=dues.find(x=>x.apartment_id===u.id);const paid=paidByUnit.get(u.id)||0;const bal=debts.get(u.id)||0;const st=status(d,paid);return `<div class="mobile-due-card"><div class="mobile-due-top"><div class="unit-chip"><span class="circle-index">${u.number}</span><div><strong>Daire ${u.number}</strong><small>${esc(u.owner||'İsim girilmedi')}</small></div></div>${ptag(st.label,st.cls)}</div><div class="mobile-due-values"><div><small>Tahakkuk</small><strong>${d?money(d.amount):'—'}</strong></div><div><small>Bu Ay Ödenen</small><strong>${money(paid)}</strong></div><div><small>Toplam Bakiye</small><strong class="${bal>0?'negative':bal<0?'positive':''}">${money(bal)}</strong></div></div>${d?`<button class="btn light sm block" data-action="modal" data-type="tx" data-kind="aidat" data-unit="${u.id}">${icon('plus',13)} Aidat Ödemesi Ekle</button><button class="btn ghost sm block" data-action="modal" data-type="due" data-id="${d.id}">${icon('edit',13)} Tahakkuk Düzenle</button>`:''}</div>`;}).join('')}</div>`;
+ return `<div class="mobile-dues-list">${units.map(u=>{const d=dues.find(x=>x.apartment_id===u.id);const paid=paidByUnit.get(u.id)||0;const bal=debts.get(u.id)||0;const st=status(d,paid);return `<div class="mobile-due-card"><div class="mobile-due-top"><div class="unit-chip"><span class="circle-index">${u.number}</span><div><strong>Daire ${u.number}</strong><small>${esc(u.owner||'İsim girilmedi')}</small></div></div>${ptag(st.label,st.cls)}</div><div class="mobile-due-values"><div><small>Tahakkuk</small><strong>${d?money(d.amount):'—'}</strong></div><div><small>Bu Ay Ödenen</small><strong>${money(paid)}</strong></div><div><small>Toplam Bakiye</small><strong class="${bal>0?'negative':bal<0?'positive':''}">${money(bal)}</strong></div></div>${d?`<button class="btn light sm block" data-action="modal" data-type="tx" data-kind="aidat" data-unit="${u.id}">${icon('plus',13)} Aidat Ödemesi Ekle</button>${paid>0?`<button class="btn red sm block" data-action="modal" data-type="payments" data-unit="${u.id}" data-period="${state.period}">${icon('refresh',13)} Ödemeleri Gör / Geri Al</button>`:''}<button class="btn ghost sm block" data-action="modal" data-type="due" data-id="${d.id}">${icon('edit',13)} Tahakkuk Düzenle</button>`:''}</div>`;}).join('')}</div>`;
 }
 function dashboard(){const c=calc();const overdue=state.units.filter(u=>(c.debts.get(u.id)||0)>.009).length;
  const monthDues=c.mDues;
@@ -137,7 +137,7 @@ function duesPage(){const c=calc();const dues=c.mDues,expected=c.mExpected,paid=
  <div class="toolbar"><div class="toolbar-left">${periodPicker()}<button class="btn light sm" data-action="modal" data-type="tx" data-kind="aidat">${icon('plus',14)} Aidat Tahsilatı</button></div><div class="toolbar-right">${ptag(`${dues.length}/${state.units.length} tahakkuk`,'blue')}</div></div>
  <div class="kpi-grid">${kpi('Aylık Tahakkuk',money(expected),'calendar',monthLabel(state.period))}${kpi('Aylık Ödenen',money(paid),'check','Bu aya mahsup edilen')}${kpi('Aylık Kalan',money(unpaid),'clock','Bu ay için')}${kpi('Geçmiş Dahil Borç',money(c.totalDebt),'wallet','Tüm dönemler')}</div>
  <article class="panel"><div class="panel-head"><div><h2 class="panel-title">Daire Bazında Aidatlar</h2><div class="panel-sub">Ödeme kaydetmek için ilgili daireye tıklayın.</div></div><button class="btn light sm" data-action="export" data-file="dues">${icon('download',14)} CSV</button></div>
- <div class="scroll-x desktop-dues-table"><table class="table"><thead><tr><th>Daire</th><th>Malik / İlgili</th><th>Bu Ay Borç</th><th>Bu Ay Ödenen</th><th>Durum</th><th>Toplam Bakiye</th><th></th></tr></thead><tbody>${state.units.map(u=>{const d=dues.find(x=>x.apartment_id===u.id);const paid=c.paidByUnit.get(u.id)||0;const s=status(d,paid);const debt=c.debts.get(u.id)||0;return`<tr><td><div class="unit-chip"><span class="circle-index">${u.number}</span><strong class="idname">Daire ${u.number}</strong></div></td><td>${esc(u.owner||'—')}</td><td class="mono">${d?money(d.amount):'—'}</td><td class="mono">${money(paid)}</td><td>${ptag(s.label,s.cls)}</td><td class="mono bold ${debt>0?'negative':debt<0?'positive':''}">${money(debt)}</td><td>${d?`<div class="actions" style="flex-wrap:nowrap"><button class="btn light xs" data-action="modal" data-type="tx" data-kind="aidat" data-unit="${u.id}">${icon('plus',12)} Öde</button><button class="btn ghost xs" title="Tahakkuku düzenle" data-action="modal" data-type="due" data-id="${d.id}">${icon('edit',13)}</button></div>`:ptag('Önce oluştur','neutral')}</td></tr>`;}).join('')}</tbody></table></div>${mobileDuesList(state.units,dues,c.paidByUnit,c.debts)}
+ <div class="scroll-x desktop-dues-table"><table class="table"><thead><tr><th>Daire</th><th>Malik / İlgili</th><th>Bu Ay Borç</th><th>Bu Ay Ödenen</th><th>Durum</th><th>Toplam Bakiye</th><th></th></tr></thead><tbody>${state.units.map(u=>{const d=dues.find(x=>x.apartment_id===u.id);const paid=c.paidByUnit.get(u.id)||0;const s=status(d,paid);const debt=c.debts.get(u.id)||0;return`<tr><td><div class="unit-chip"><span class="circle-index">${u.number}</span><strong class="idname">Daire ${u.number}</strong></div></td><td>${esc(u.owner||'—')}</td><td class="mono">${d?money(d.amount):'—'}</td><td class="mono">${money(paid)}</td><td>${ptag(s.label,s.cls)}</td><td class="mono bold ${debt>0?'negative':debt<0?'positive':''}">${money(debt)}</td><td>${d?`<div class="actions" style="flex-wrap:nowrap"><button class="btn light xs" data-action="modal" data-type="tx" data-kind="aidat" data-unit="${u.id}">${icon('plus',12)} Öde</button>${paid>0?`<button class="btn red xs" data-action="modal" data-type="payments" data-unit="${u.id}" data-period="${state.period}" title="Bu dairenin ödeme kayıtlarını göster ve yanlış girileni geri al">${icon('refresh',12)} Geri Al</button>`:''}<button class="btn ghost xs" title="Tahakkuku düzenle" data-action="modal" data-type="due" data-id="${d.id}">${icon('edit',13)}</button></div>`:ptag('Önce oluştur','neutral')}</td></tr>`;}).join('')}</tbody></table></div>${mobileDuesList(state.units,dues,c.paidByUnit,c.debts)}
  ${dues.length===0?`<div class="alert warn" style="margin-top:18px">Bu ay henüz tahakkuk oluşturulmadı. Üstteki <b>Ayın aidatlarını oluştur</b> butonuna basın.</div>`:''}
  </article><div class="note">Tahakkuklar bir kez oluşturulduktan sonra aidat tutarının ayarlardan değiştirilmesi geçmiş ayları etkilemez. Geçmiş borçlar için dairenin <b>Devir borcu</b> alanını kullanın; ödeme alırken <b>Devir borcu tahsilatı</b> seçin. Negatif toplam bakiye, dairenin alacağını gösterir.</div>`;
 }
@@ -195,6 +195,18 @@ function modalMarkup(){const m=state.modal;if(!m)return'';
  if(m.type==='more'){
   const tabs=[['accounts','Kasa & Banka','wallet'],['reports','Raporlar','chart'],['team','Yöneticiler','users'],['settings','Ayarlar','cog']].filter(([p])=>p!=='team'||state.member?.role==='admin');
   return `<div class="modal-backdrop" data-overlay="1"><div class="modal" role="dialog" aria-modal="true"><div class="modal-head"><h3>Diğer Bölümler</h3><button class="modal-close" data-action="close" aria-label="Kapat">×</button></div><div class="modal-content"><div class="more-grid">${tabs.map(([p,l,i])=>`<button class="more-item" data-action="nav" data-page="${p}">${icon(i,20)}<span>${l}</span>${icon('arrow',15)}</button>`).join('')}<button class="more-item" data-action="logout">${icon('logout',20)}<span>Çıkış yap</span>${icon('arrow',15)}</button></div></div></div></div>`;
+ }
+ if(m.type==='payments'){
+  const unit=getUnit(m.unit);
+  const period=PERIOD(m.period);
+  if(!unit || !/^\d{4}-\d{2}-01$/.test(period))return'';
+  const payments=state.tx.filter(t=>t.kind==='aidat'&&t.apartment_id===unit.id&&t.period===period)
+    .sort((a,b)=>b.occurred_on.localeCompare(a.occurred_on)||b.created_at.localeCompare(a.created_at));
+  const total=payments.reduce((sum,t)=>sum+num(t.amount),0);
+  return `<div class="modal-backdrop" data-overlay="1"><div class="modal" role="dialog" aria-modal="true" aria-label="Ödeme geçmişi"><div class="modal-head"><h3>${esc(unitName(unit.id))} • ${monthLabel(period)} Ödemeleri</h3><button class="modal-close" data-action="close" aria-label="Kapat">×</button></div><div class="modal-content"><p class="tip">Bu dönemin kaydedilmiş tahsilatları: <strong>${money(total)}</strong></p>
+  <div class="alert warn">Yanlış kaydedilen bir tahsilatı geri almak, hem aidat borcunu hem kasa/banka bakiyesini düzeltir. Gerçek bankacılık işlemlerini geri almaz. Geri alınan kayıt denetim günlüğünde saklanır.</div>
+  ${payments.length?payments.map(t=>`<div class="account-item" style="gap:10px;align-items:center;flex-wrap:wrap"><div class="desc" style="flex:1;min-width:145px"><strong>${money(t.amount)}</strong><span>${shortDate(t.occurred_on)} • ${esc(accountName(t.account_id))}${t.description?` • ${esc(t.description)}`:''}</span></div><button class="btn red sm" data-action="cancel-payment" data-id="${t.id}" data-unit="${unit.id}" data-period="${period}">${icon('trash',13)} Bu Ödemeyi Geri Al</button></div>`).join(''):`<p class="tip">Bu aya ait ödeme kalmadı.</p>`}
+  <div class="form-actions"><button class="btn light" data-action="close">Kapat</button></div></div></div></div>`;
  }
  if(m.type==='due'){
   const d=state.dues.find(x=>x.id===m.id);if(!d)return'';
@@ -259,7 +271,7 @@ function toggleTransactionSections(){const f=document.querySelector('form[data-f
  f.querySelectorAll('[data-kinds]').forEach(el=>el.classList.toggle('hide',!el.dataset.kinds.split(' ').includes(kind)));
 }
 function changePage(page){state.page=page;state.modal=null;render();window.scrollTo({top:0,behavior:'instant'});}
-function openModal(type,id=null,kind=null,unit=null){state.modal={type,id,kind,unit};render();if(type==='tx')toggleTransactionSections();}
+function openModal(type,id=null,kind=null,unit=null,period=null){state.modal={type,id,kind,unit,period:period||state.period};render();if(type==='tx')toggleTransactionSections();}
 function closeModal(){state.modal=null;render();if(state.pendingRefresh)loadData(true);}
 
 async function allRows(table,orgId,otherFilters=[]){let offset=0,all=[];const limit=1000;
@@ -327,11 +339,19 @@ async function generateDues(){if(!state.org)return;
  });
 }
 async function deleteTx(id){const t=state.tx.find(x=>x.id===id);if(!t)return;
- if(!confirm(`${shortDate(t.occurred_on)} tarihli ${money(t.amount)} tutarındaki “${kindLabel(t.kind)}” kaydı silinsin mi? Bu işlem denetim günlüğüne kaydedilir.`))return;
+ const detail=t.kind==='aidat'?`${unitName(t.apartment_id)} • ${monthLabel(t.period)} • ${esc(accountName(t.account_id))}`:kindLabel(t.kind);
+ if(!confirm(`${shortDate(t.occurred_on)} tarihli ${money(t.amount)} tutarındaki “${detail}” kaydı geri alınsın mı? Yanlış tahsilat kasa/bankadan düşülecek ve aidat borcuna geri eklenecek. Denetim günlüğüne kaydedilir.`))return;
  await runLocked(async()=>{const {error}=await state.client.from('transactions').delete().eq('id',id).eq('organization_id',state.org.id);if(error)throw error;
  if(t.receipt_path){const {error:storageError}=await state.client.storage.from('apartman-dekontlari').remove([t.receipt_path]);if(storageError)toast('İşlem silindi fakat dekont dosyası temizlenemedi.','error');}
  toast('Hareket silindi.');await loadData(true);
  });
+}
+async function cancelPayment(id,unitId,period){
+ const t=state.tx.find(x=>x.id===id);
+ if(!t||t.kind!=='aidat'||t.apartment_id!==unitId||t.period!==PERIOD(String(period).slice(0,7))){
+  toast('Ödeme kaydı değişmiş olabilir. Listeyi yenileyip tekrar deneyin.','error');return;
+ }
+ await deleteTx(id);
 }
 async function deleteDue(id){const d=state.dues.find(x=>x.id===id);if(!d)return;
  if(state.tx.some(t=>t.kind==='aidat'&&t.apartment_id===d.apartment_id&&t.period===d.period)){toast('Ödeme yapılmış tahakkuk silinemez.','error');return;}
@@ -450,14 +470,15 @@ async function handleForm(event){const f=event.target.closest('form[data-form]')
  });
 }
 async function handleAction(event){const button=event.target.closest('[data-action]');if(!button)return;
- const {action,id,page,type,kind,unit,mode,file}=button.dataset;
+ const {action,id,page,type,kind,unit,mode,file,period}=button.dataset;
  switch(action){
   case'nav':changePage(page);break;
   case'mobile-more':openModal('more');break;
   case'close':closeModal();break;
-  case'modal':openModal(type,id||null,kind||null,unit||null);break;
+  case'modal':openModal(type,id||null,kind||null,unit||null,period||null);break;
   case'generate':await generateDues();break;
   case'delete-tx':await deleteTx(id);break;
+  case'cancel-payment':await cancelPayment(id,button.dataset.unit,button.dataset.period);break;
   case'delete-due':await deleteDue(id);break;
   case'remove-member':await removeMember(id);break;
   case'remove-invite':await removeInvite(id);break;

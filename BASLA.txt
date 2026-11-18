@@ -1,23 +1,32 @@
-APARTMANIM - HIZLI KURULUM (2 TELEFON + 1 PC)
-=================================================
+APARTMANIM 1.1 — AİDAT ÖDEMESİNİ GERİ AL
 
-1. Supabase hesabı aç -> New Project oluştur.
-2. SQL Editor -> sql/kurulum.sql dosyasının tamamını çalıştır.
-3. Supabase Project URL ve publishable/anon key'ini bul.
-4. config.js dosyasındaki iki BURAYA_... alanını bunlarla değiştir.
-   NOT: service_role/secret anahtarı asla kullanma!
-5. ZIP dosyasını aç. İçindeki site dosyalarını GitHub reposuna kök dizine yükle.
-6. GitHub -> Settings -> Pages -> Deploy from a branch -> main / (root).
-7. Supabase Authentication -> URL Configuration'da GitHub Pages adresini
-   Site URL ve Redirect URLs olarak ekle.
-8. Siteyi aç, kendi e-postanla Hesap Oluştur. E-posta doğrulamasını yap.
-9. Supabase SQL Editor'de sql/ilk_yonetici_ornek.sql içindeki
-   EMAIL_ADRESINIZ bölümünü değiştirip çalıştır.
-10. Siteden giriş yap. Yöneticiler bölümünden 2. ve 3. yöneticiye
-    kendi e-posta adresleri üzerinden davet yetkisi ver.
-11. Daireleri ve açılış bakiyelerini düzenle; ayın aidatlarını oluştur.
+Bu güncelleme mevcut GitHub Pages + Supabase kurulumuna uygulanır.
+SİTENİN VERİLERİNİ SİLMEZ. YENİ SUPABASE SQL GEREKTİRMEZ.
 
-ÖNEMLİ: GitHub Pages sadece uygulama arayüzüdür. Finansal veriler
-Supabase veritabanında saklanır. İnternet ve çalışan Supabase projesi gerekir.
+NASIL GÜNCELLENİR?
+1. GitHub'da alpdemirkapu/apartmanim reposunu aç.
+2. Önce mevcut app.js dosyasının yedeğini indir (isteğe bağlı).
+3. Add file > Upload files bölümünden bu paketteki app.js ve sw.js dosyalarını
+   repository'nin ANA KLASÖRÜNE yükle ve Commit changes de.
+4. index.html, config.js ve SQL dosyalarına dokunma.
+5. GitHub Pages güncellemesi yayınlandığında uygulamada Ctrl+F5 ile yenile.
+   iPhone'da siteyi kapatıp tekrar aç; gerekirse Safari'den web sayfasını yenile.
 
-DAHA AYRINTILI VE SORUN GİDERME TALİMATLARI: README.md
+NASIL KULLANILIR?
+1. Apartmanım > Aidat Takibi bölümüne gir.
+2. İlgili ayı seç.
+3. Ödenmiş dairenin yanında "Geri Al" (telefonda "Ödemeleri Gör / Geri Al") butonuna bas.
+4. Listede tarih, tahsilat hesabı ve tutara bakarak hatalı kaydı seç.
+5. "Bu Ödemeyi Geri Al" butonuna bas ve onayla.
+6. Aynı ay için başka ödeme yoksa durum yeniden "Ödenmedi" olur.
+   Kasa/banka bakiyesi ve daire borcu otomatik yeniden hesaplanır.
+
+NOTLAR
+- Yalnızca yanlışlıkla uygulamada kaydedilen ödeme hareketini geri al.
+- Bu işlem banka hesabındaki gerçek para hareketini geri almaz.
+- Bir dairenin aynı ay birden çok kısmi ödemesi varsa sadece seçtiğini iptal eder.
+- İşlem ayrıntıları veritabanındaki audit_logs tablosunda denetim için kalır.
+- Mevcut ikinci yol: Gelir & Gider > Aidat hareketini bul > çöp kutusu.
+
+Bu paket sadece arayüz ve uygulama mantığı değişikliği içerir:
+app.js, sw.js. Yeni veritabanı kurulumu veya kullanıcı hesabı açma gerektirmez.
