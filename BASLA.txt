@@ -1,0 +1,23 @@
+APARTMANIM - HIZLI KURULUM (2 TELEFON + 1 PC)
+=================================================
+
+1. Supabase hesabı aç -> New Project oluştur.
+2. SQL Editor -> sql/kurulum.sql dosyasının tamamını çalıştır.
+3. Supabase Project URL ve publishable/anon key'ini bul.
+4. config.js dosyasındaki iki BURAYA_... alanını bunlarla değiştir.
+   NOT: service_role/secret anahtarı asla kullanma!
+5. ZIP dosyasını aç. İçindeki site dosyalarını GitHub reposuna kök dizine yükle.
+6. GitHub -> Settings -> Pages -> Deploy from a branch -> main / (root).
+7. Supabase Authentication -> URL Configuration'da GitHub Pages adresini
+   Site URL ve Redirect URLs olarak ekle.
+8. Siteyi aç, kendi e-postanla Hesap Oluştur. E-posta doğrulamasını yap.
+9. Supabase SQL Editor'de sql/ilk_yonetici_ornek.sql içindeki
+   EMAIL_ADRESINIZ bölümünü değiştirip çalıştır.
+10. Siteden giriş yap. Yöneticiler bölümünden 2. ve 3. yöneticiye
+    kendi e-posta adresleri üzerinden davet yetkisi ver.
+11. Daireleri ve açılış bakiyelerini düzenle; ayın aidatlarını oluştur.
+
+ÖNEMLİ: GitHub Pages sadece uygulama arayüzüdür. Finansal veriler
+Supabase veritabanında saklanır. İnternet ve çalışan Supabase projesi gerekir.
+
+DAHA AYRINTILI VE SORUN GİDERME TALİMATLARI: README.md
