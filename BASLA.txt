@@ -1,32 +1,34 @@
-APARTMANIM 1.1 — AİDAT ÖDEMESİNİ GERİ AL
+APARTMANIM v1.2 — iPHONE 16 PRO MAX EKRAN / ZOOM DÜZELTMESİ
+===========================================================
 
-Bu güncelleme mevcut GitHub Pages + Supabase kurulumuna uygulanır.
-SİTENİN VERİLERİNİ SİLMEZ. YENİ SUPABASE SQL GEREKTİRMEZ.
+Bu paket mevcut GitHub Pages uygulamasına yönelik GÖRSEL güncellemedir.
 
-NASIL GÜNCELLENİR?
-1. GitHub'da alpdemirkapu/apartmanim reposunu aç.
-2. Önce mevcut app.js dosyasının yedeğini indir (isteğe bağlı).
-3. Add file > Upload files bölümünden bu paketteki app.js ve sw.js dosyalarını
-   repository'nin ANA KLASÖRÜNE yükle ve Commit changes de.
-4. index.html, config.js ve SQL dosyalarına dokunma.
-5. GitHub Pages güncellemesi yayınlandığında uygulamada Ctrl+F5 ile yenile.
-   iPhone'da siteyi kapatıp tekrar aç; gerekirse Safari'den web sayfasını yenile.
+GÜNCELLENEN DOSYALAR
+- styles.css : iPhone Safari form otomatik yakınlaştırmasını azaltan 16px giriş yazıları;
+               tek sütun mobil formlar; Dynamic Island/alt çubuk güvenli alanları.
+- sw.js     : önbellek sürümü yükseltildi; yalnızca Apartmanım'a ait eski
+               önbellekler temizlenir (aynı GitHub hesabındaki ALP FIT
+               gibi başka uygulamaların önbelleklerine dokunmaz).
 
-NASIL KULLANILIR?
-1. Apartmanım > Aidat Takibi bölümüne gir.
-2. İlgili ayı seç.
-3. Ödenmiş dairenin yanında "Geri Al" (telefonda "Ödemeleri Gör / Geri Al") butonuna bas.
-4. Listede tarih, tahsilat hesabı ve tutara bakarak hatalı kaydı seç.
-5. "Bu Ödemeyi Geri Al" butonuna bas ve onayla.
-6. Aynı ay için başka ödeme yoksa durum yeniden "Ödenmedi" olur.
-   Kasa/banka bakiyesi ve daire borcu otomatik yeniden hesaplanır.
+NELERE DOKUNULMUYOR?
+- app.js, config.js, Supabase SQL dosyaları, aidat/ödeme verileri.
+- Aidat ödemesi geri alma (v1.1) özelliği aynen kalır.
+- iPhone'un erişilebilirlik için iki parmakla yakınlaştırma özelliği kapatılmadı.
 
-NOTLAR
-- Yalnızca yanlışlıkla uygulamada kaydedilen ödeme hareketini geri al.
-- Bu işlem banka hesabındaki gerçek para hareketini geri almaz.
-- Bir dairenin aynı ay birden çok kısmi ödemesi varsa sadece seçtiğini iptal eder.
-- İşlem ayrıntıları veritabanındaki audit_logs tablosunda denetim için kalır.
-- Mevcut ikinci yol: Gelir & Gider > Aidat hareketini bul > çöp kutusu.
+KURULUM
+1. Bu ZIP'i bilgisayarda aç.
+2. GitHub > alpdemirkapu/apartmanim deposunu aç.
+3. Add file > Upload files yoluna gir.
+4. YALNIZCA styles.css ve sw.js dosyalarını deponun ana dizinine yükle.
+   Mevcut dosyaların üzerine güncellemeyi uygula (Commit changes).
+5. GitHub Pages'in yeni değişikliği yayınlamasının ardından:
+   - iPhone'da ana ekrandaki Apartmanım uygulamasını uygulama değiştiriciden
+     tamamen kapatıp yeniden aç.
+   - Hâlâ eski tasarım görünüyorsa Safari'den aynı web adresini açıp
+     sayfayı yenile, ardından ana ekran uygulamasını tekrar aç.
+6. Aidat ödeme / gelir-gider formlarına dokunup ekranın otomatik zoom yapıp
+   yapmadığını kontrol et.
 
-Bu paket sadece arayüz ve uygulama mantığı değişikliği içerir:
-app.js, sw.js. Yeni veritabanı kurulumu veya kullanıcı hesabı açma gerektirmez.
+NOT: Veritabanını tekrar kurma, SQL çalıştırma veya ana ekran simgesini
+silip tekrar ekleme gerekmiyor. iPhone'un sistemdeki Ekran Yakınlaştırma
+ayarını bu web güncellemesi değiştiremez.
